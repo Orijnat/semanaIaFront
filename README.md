@@ -22,16 +22,22 @@ As rotas usam o App Router e compartilham a navegação de [`AppShell`](src/comp
 | --- | --- | --- |
 | `/` | Visão geral | Dashboard com métricas fixas, etapas do pipeline, itens de atenção e afiliadas recentes. |
 | `/visao-geral` | Visão geral | Exibe o mesmo dashboard da rota inicial. |
+| `/pendencias/documentos` | Documentos pendentes | Lista empresas e documentos que precisam ser conferidos ou enviados. |
+| `/pendencias/pagamentos` | Pagamentos próximos | Lista cobranças próximas do vencimento e notas relacionadas. |
+| `/pendencias/procuradoria` | Retorno da Procuradoria | Lista contratos enviados, pendentes e concluídos. |
 | `/afiliadas` | Afiliadas | Tabela com busca, filtros, criação, edição e exclusão local de afiliadas. |
 | `/documentos` | Documentos | Lista indicadores mockados e permite cadastrar, editar e excluir registros genéricos de documento. |
-| `/financeiro` | Financeiro | Lista indicadores mockados e permite cadastrar, editar e excluir lançamentos genéricos. |
+| `/documentos/validade` | Validades próximas | Lista documentos próximos do vencimento. |
+| `/documentos/historico` | Histórico de envios | Lista documentos enviados e seus registros de recebimento. |
+| `/financeiro` | Financeiro | Exibe indicadores, permite cadastrar, editar e excluir lançamentos genéricos e possui área local para preparar o envio de notas fiscais de pagamento. |
 | `/comunicacoes` | Comunicações | Lista indicadores mockados e permite cadastrar, editar e excluir registros de comunicação. |
 | `/configuracoes` | Configurações | Lista indicadores mockados e permite cadastrar, editar e excluir configurações genéricas. |
 Não há rota de login, formulário público de inscrição, detalhe de empresa ou área restrita por perfil implementados neste frontend.
 ## Componentes reutilizáveis
 - [`AppShell`](src/components/AppShell.jsx): layout compartilhado com marca, navegação lateral, breadcrumb, notificações visuais e usuário estático.
 - [`DashboardPage`](src/components/DashboardPage.jsx): dashboard do programa, usado por `/` e `/visao-geral`.
-- [`AffiliatesTable`](src/components/AffiliatesTable.jsx): tabela de afiliadas com busca por empresa/responsável, filtros por etapa e abertura do CRUD. Aceita `compact` para o título de empresas recentes.
+- [`AffiliatesTable`](src/components/AffiliatesTable.jsx): tabela de afiliadas com busca por empresa/responsável, filtros por etapa, paginação local e abertura do CRUD. Aceita `compact` para o título de empresas recentes.
+- [`Pagination`](src/components/Pagination.jsx): controles reutilizáveis de paginação local, com página atual, total de páginas, navegação anterior/próxima e tamanho da página.
 - [`SectionPage`](src/components/SectionPage.jsx): página genérica das seções de documentos, financeiro, comunicações e configurações. Recebe `activePage`, `title`, `eyebrow`, `description` e `items`.
 - [`CrudModal`](src/components/CrudModal.jsx): modal controlado por propriedades para formulário de criação/edição. Recebe `title`, `fields`, `initialData`, `onClose`, `onSave` e, em edição, `onDelete`.
 ## Comportamento do CRUD
@@ -42,6 +48,9 @@ O modal é usado para afiliadas e para as quatro páginas baseadas em `SectionPa
 - `Excluir` aparece somente ao editar um registro existente.
 - O modal fecha pelo botão de fechar, por `Esc`, por clique no backdrop ou por `Cancelar`.
 - A lista é atualizada com `useState`; não há confirmação adicional, persistência, upload ou chamada de API.
+- As listas de afiliadas, notas fiscais e registros de `SectionPage` usam paginação local sobre os arrays em memória. Busca e filtros das afiliadas são aplicados antes da paginação, e mudanças nesses critérios retornam à primeira página; não há paginação de servidor nem parâmetros de API.
+
+Na página Financeiro, o painel de notas permite selecionar empresa, competência, valor, número da nota e arquivo PDF/XML. A seleção local rejeita extensões fora de PDF/XML e arquivos acima de 10 MB. A nota é adicionada apenas à fila local do navegador e recebe status visual de `Aguardando envio`; não existe upload persistido ou transmissão para o backend.
 ## Dados e persistência
 Os dados exibidos são mockados no código:
 - [`dashboard-data.js`](src/app/dashboard-data.js) contém afiliadas, etapas do pipeline e filtros iniciais.
@@ -63,7 +72,7 @@ Ainda não implementado:
 
 - Estados de carregamento, erro de requisição e sucesso vindo de servidor.
 - Login, autorização e isolamento de dados por perfil.
-- Upload/listagem real de documentos, geração de termos e integração com a Procuradoria.
+- Upload/listagem real de documentos e notas fiscais, geração de termos e integração com a Procuradoria.
 - Registro financeiro com NF, boleto, vencimento e confirmação persistidos.
 - Envio real ou sincronização de e-mails.
 - Auditoria, renovação, notificações funcionais e exportação. O botão `Exportar` é apenas visual.

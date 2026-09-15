@@ -1,17 +1,22 @@
 export const affiliates = [
   {
+    id: "affiliate-nexora-tecnologia",
     name: "Nexora Tecnologia", contact: "Marina Costa", status: "Em análise", statusClass: "analysis", updated: "Hoje, 09:42", initials: "NT",
   },
   {
+    id: "affiliate-bioma-circular",
     name: "Bioma Circular", contact: "Rafael Nunes", status: "Documentação pendente", statusClass: "pending", updated: "Ontem, 16:18", initials: "BC",
   },
   {
+    id: "affiliate-atlas-mobilidade",
     name: "Atlas Mobilidade", contact: "Camila Rocha", status: "Contrato em preparação", statusClass: "contract", updated: "12 set, 14:05", initials: "AM",
   },
   {
+    id: "affiliate-cais-internacional",
     name: "Cais Internacional", contact: "Eduardo Lima", status: "Aguardando pagamento", statusClass: "payment", updated: "11 set, 10:27", initials: "CI",
   },
   {
+    id: "affiliate-verde-norte-energia",
     name: "Verde Norte Energia", contact: "Ana Martins", status: "Ativo", statusClass: "active", updated: "10 set, 17:36", initials: "VN",
   },
 ];
