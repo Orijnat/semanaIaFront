@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002/api/v1';
 
 const unwrap = ({ data }) => data?.data ?? data;
 
@@ -30,21 +30,21 @@ export const demoUsers = {
     initialRoute: '/'
   },
   'empresa@biomacircular.com.br': {
-    name: 'Rafael Nunes',
+    name: 'Marcos Vinicius',
     role: 'Empresa afiliada',
     email: 'empresa@biomacircular.com.br',
-    avatar: 'RN',
-    companyId: 'affiliate-bioma-circular',
-    companyName: 'Bioma Circular',
+    avatar: 'MV',
+    companyId: '11111111-1111-1111-1111-111111111101',
+    companyName: 'AgroTech',
     initialRoute: '/portal-empresa'
   },
   'empresa@nexora.com.br': {
-    name: 'Marina Costa',
+    name: 'Renata Alcantara',
     role: 'Empresa afiliada',
     email: 'empresa@nexora.com.br',
-    avatar: 'MC',
-    companyId: 'affiliate-nexora-tecnologia',
-    companyName: 'Nexora Tecnologia',
+    avatar: 'RA',
+    companyId: '11111111-1111-1111-1111-111111111102',
+    companyName: 'BioSaúde',
     initialRoute: '/portal-empresa'
   },
   'financeiro@pollenparque.org.br': {
@@ -101,185 +101,70 @@ export const api = {
   },
 
   portal: {
-    getCompanyData: async (companyId = 'affiliate-bioma-circular') => {
-      // Mock data com fallback inteligente e isolado para o Portal da Empresa
-      return {
-        company: {
-          id: companyId,
-          razaoSocial: 'Bioma Circular Soluções Sustentáveis Ltda.',
-          nomeFantasia: 'Bioma Circular',
-          cnpj: '48.912.345/0001-89',
-          representanteNome: 'Rafael Nunes',
-          emailContato: 'empresa@biomacircular.com.br',
-          telefoneContato: '(49) 3321-8840',
-          porte: 'Empresa de Médio Porte / Scale-up',
-          categoria: 'Afiliada Residente e Tecnológica',
-          status: 'Ativo',
-          dataAdesao: '15/01/2026',
-          endereco: 'Pollen Parque Científico Tecnológico - Bloco Inovação, Sala 204'
-        },
-        contract: {
-          status: 'Vigente',
-          numeroTermo: 'TERMO-AFF-2026/042',
-          dataInicio: '20/01/2026',
-          dataTermino: '19/01/2027',
-          proximaRenovacao: '20/01/2027',
-          diasRestantes: 124,
-          valorAnuidadeAnual: 21600,
-          formaPagamento: 'Mensalidade recorrente (12x de R$ 1.800,00)',
-          procuradoriaStatus: 'Assinado e Homologado'
-        },
-        benefits: [
-          {
-            id: 'ben-lab',
-            title: 'Laboratórios & Coworking',
-            category: 'Infraestrutura',
-            icon: '🔬',
-            description: 'Acesso 24/7 às estações de trabalho e laboratórios com franquia de 40h/mês para a equipe técnica.',
-            status: 'Ativo',
-            badge: '40h / mês disponíveis'
+    getCompanyData: async (companyId = '11111111-1111-1111-1111-111111111101') => {
+      try {
+        const response = await apiClient.get(`/companies/${companyId}`);
+        const dbData = unwrap(response);
+        
+        return {
+          company: {
+            id: dbData.id,
+            razaoSocial: dbData.razaoSocial || 'Não informada',
+            nomeFantasia: dbData.nomeFantasia || 'Sem Nome',
+            cnpj: dbData.cnpj || 'Não informado',
+            representanteNome: dbData.representanteNome || 'Não informado',
+            emailContato: dbData.emailContato || 'Não informado',
+            telefoneContato: dbData.telefone || 'Não informado',
+            porte: dbData.tipo || 'Não informado',
+            categoria: 'Afiliada',
+            status: dbData.status || 'Desconhecido',
+            dataAdesao: dbData.dataVigenciaInicio ? new Date(dbData.dataVigenciaInicio).toLocaleDateString('pt-BR') : 'Não informada',
+            endereco: dbData.enderecoCompleto || 'Sede Pollen'
           },
-          {
-            id: 'ben-rooms',
-            title: 'Salas de Reunião & Videoconferência',
-            category: 'Espaços',
-            icon: '🏢',
-            description: 'Reserva antecipada de salas equipadas com displays interativos e link de fibra ótica de 1 Gbps.',
-            status: 'Ativo',
-            badge: '10h mensais incluídas'
+          contract: {
+            status: dbData.status,
+            numeroTermo: dbData.contratos?.[0]?.numeroTermo || 'N/A',
+            dataInicio: dbData.dataVigenciaInicio ? new Date(dbData.dataVigenciaInicio).toLocaleDateString('pt-BR') : 'N/A',
+            dataTermino: dbData.dataVigenciaFim ? new Date(dbData.dataVigenciaFim).toLocaleDateString('pt-BR') : 'N/A',
+            proximaRenovacao: dbData.dataVigenciaFim ? new Date(dbData.dataVigenciaFim).toLocaleDateString('pt-BR') : 'N/A',
+            diasRestantes: dbData.dataVigenciaFim ? Math.max(0, Math.ceil((new Date(dbData.dataVigenciaFim) - new Date()) / (1000 * 60 * 60 * 24))) : 0,
+            valorAnuidadeAnual: dbData.contratos?.[0]?.valorAnuidade || 0,
+            formaPagamento: 'Padrão',
+            procuradoriaStatus: (dbData.assinaturas?.length >= 5) ? 'Assinado e Homologado' : 'Em andamento'
           },
-          {
-            id: 'ben-auditorio',
-            title: 'Auditório e Espaço de Eventos',
-            category: 'Eventos',
-            icon: '🎤',
-            description: '50% de desconto na locação do auditório principal para encontros técnicos, meetups e demonstrações.',
-            status: 'Ativo',
-            badge: '50% de desconto'
-          },
-          {
-            id: 'ben-mentoria',
-            title: 'Rede de Mentores e Matchmaking',
-            category: 'Conexões',
-            icon: '💡',
-            description: 'Sessões mensais de mentoria executiva, apoio em editais FINEP/FAPESC e conexão com empresas âncoras.',
-            status: 'Ativo',
-            badge: 'Sessões mensais'
-          },
-          {
-            id: 'ben-fiscal',
-            title: 'Endereço Fiscal e Comercial',
-            category: 'Institucional',
-            icon: '📍',
-            description: 'Uso da sede do Pollen Parque como endereço fiscal, domicílio tributário e divulgação no portal oficial.',
-            status: 'Ativo',
-            badge: 'Incluído na anuidade'
-          },
-          {
-            id: 'ben-cursos',
-            title: 'Workshops & Capacitação',
-            category: 'Educação',
-            icon: '🎓',
-            description: 'Desconto de até 30% em cursos de extensão e programas executivos de inovação da rede associada.',
-            status: 'Ativo',
-            badge: '30% off'
-          }
-        ],
-        pendingDocuments: [
-          {
-            id: 'doc-cnd-01',
-            tipo: 'Certidão Negativa de Débitos Federais (CND)',
-            situacao: 'Pendente de envio',
-            statusClass: 'pending',
-            dataExigencia: '10/09/2026',
-            validade: 'Vencida recentemente',
+          benefits: [
+            { id: 'ben-lab', title: 'Laboratórios & Coworking', category: 'Infraestrutura', icon: '🔬', description: 'Acesso 24/7 às estações de trabalho e laboratórios com franquia de 40h/mês para a equipe técnica.', status: 'Ativo', badge: '40h / mês disponíveis' },
+            { id: 'ben-rooms', title: 'Salas de Reunião & Videoconferência', category: 'Espaços', icon: '🏢', description: 'Reserva antecipada de salas equipadas com displays interativos e link de fibra ótica de 1 Gbps.', status: 'Ativo', badge: '10h mensais incluídas' },
+            { id: 'ben-auditorio', title: 'Auditório e Espaço de Eventos', category: 'Eventos', icon: '🎤', description: '50% de desconto na locação do auditório principal para encontros técnicos, meetups e demonstrações.', status: 'Ativo', badge: '50% de desconto' },
+            { id: 'ben-mentoria', title: 'Rede de Mentores e Matchmaking', category: 'Conexões', icon: '💡', description: 'Sessões mensais de mentoria executiva, apoio em editais FINEP/FAPESC e conexão com empresas âncoras.', status: 'Ativo', badge: 'Sessões mensais' }
+          ],
+          pendingDocuments: (dbData.documentos || []).map(d => ({
+            id: d.id,
+            tipo: d.tipo,
+            situacao: d.statusConferencia,
+            statusClass: d.statusConferencia === 'REJEITADO' ? 'pending' : (d.statusConferencia === 'APROVADO' ? 'active' : 'analysis'),
+            dataExigencia: new Date(d.createdAt).toLocaleDateString('pt-BR'),
+            validade: 'Conforme edital',
             obrigatorio: true,
-            instrucao: 'Por favor, envie a CND atualizada emitida pela Receita Federal.'
-          },
-          {
-            id: 'doc-relatorio-02',
-            tipo: 'Relatório Semestral de Inovação',
-            situacao: 'Em análise pela equipe',
-            statusClass: 'analysis',
-            dataExigencia: '01/09/2026',
-            validade: '2026.1',
-            obrigatorio: false,
-            instrucao: 'Enviado em 05/09/2026. Aguardando validação da coordenação.'
-          },
-          {
-            id: 'doc-contrato-social',
-            tipo: 'Contrato Social Consolidado',
-            situacao: 'Aprovado',
-            statusClass: 'active',
-            dataExigencia: '15/01/2026',
-            validade: 'Vigente',
-            obrigatorio: true,
-            instrucao: 'Documento conferido e aprovado.'
-          },
-          {
-            id: 'doc-termo-assinado',
-            tipo: 'Termo de Adesão Pollen Parque',
-            situacao: 'Aprovado',
-            statusClass: 'active',
-            dataExigencia: '20/01/2026',
-            validade: 'Vigente até Jan/2027',
-            obrigatorio: true,
-            instrucao: 'Assinatura digital autenticada.'
-          }
-        ],
-        payments: [
-          {
-            id: 'pay-2026-09',
-            competencia: '09/2026',
-            tipo: 'Parcela da Anuidade',
-            valor: 1800,
-            vencimento: '25/09/2026',
-            status: 'Aguardando pagamento',
-            statusClass: 'payment',
-            linhaDigitavel: '23793.38128 60000.123456 01000.654321 8 98450000180000',
-            nfNumero: 'NF-e 004812',
-            boletoUrl: '#',
-            diasAteVencimento: 8
-          },
-          {
-            id: 'pay-2026-09-extra',
-            competencia: '09/2026',
-            tipo: 'Locação Adicional de Sala de Treinamento',
-            valor: 450,
-            vencimento: '30/09/2026',
-            status: 'Aguardando pagamento',
-            statusClass: 'payment',
-            linhaDigitavel: '23793.38128 60000.789012 01000.987654 3 98500000045000',
-            nfNumero: 'NF-e 004835',
-            boletoUrl: '#',
-            diasAteVencimento: 13
-          },
-          {
-            id: 'pay-2026-08',
-            competencia: '08/2026',
-            tipo: 'Parcela da Anuidade',
-            valor: 1800,
-            vencimento: '25/08/2026',
-            status: 'Pago',
-            statusClass: 'active',
-            dataPagamento: '24/08/2026',
-            nfNumero: 'NF-e 004590',
-            comprovante: 'Autenticação Bancária #881293'
-          },
-          {
-            id: 'pay-2026-07',
-            competencia: '07/2026',
-            tipo: 'Parcela da Anuidade',
-            valor: 1800,
-            vencimento: '25/07/2026',
-            status: 'Pago',
-            statusClass: 'active',
-            dataPagamento: '23/07/2026',
-            nfNumero: 'NF-e 004312',
-            comprovante: 'Autenticação Bancária #774102'
-          }
-        ]
-      };
+            instrucao: d.justificativaRejeicao || 'Documento registrado no sistema.'
+          })),
+          payments: (dbData.faturas || []).map(p => ({
+            id: p.id,
+            competencia: p.dataVencimento ? p.dataVencimento.substring(0,7) : 'N/A',
+            tipo: 'Fatura/Parcela',
+            valor: p.valor,
+            vencimento: p.dataVencimento ? new Date(p.dataVencimento).toLocaleDateString('pt-BR') : 'N/A',
+            status: p.status === 'PENDENTE' ? 'Aguardando pagamento' : 'Pago',
+            statusClass: p.status === 'PENDENTE' ? 'payment' : 'active',
+            linhaDigitavel: p.numeroBoleto || p.pixCopiaCola,
+            nfNumero: p.numeroNf,
+            diasAteVencimento: p.dataVencimento ? Math.max(0, Math.ceil((new Date(p.dataVencimento) - new Date()) / (1000 * 60 * 60 * 24))) : 0
+          }))
+        };
+      } catch (err) {
+        console.error('Erro ao buscar dados do portal:', err);
+        throw err;
+      }
     }
   },
 

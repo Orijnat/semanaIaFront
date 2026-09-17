@@ -35,7 +35,7 @@ export default function CompanyPortalPage() {
       return;
     }
 
-    const companyId = user?.companyId || "affiliate-bioma-circular";
+    const companyId = user?.companyId?.startsWith('affiliate-') ? '11111111-1111-1111-1111-111111111101' : (user?.companyId || "11111111-1111-1111-1111-111111111101");
     api.portal.getCompanyData(companyId)
       .then((data) => {
         setPortalData(data);

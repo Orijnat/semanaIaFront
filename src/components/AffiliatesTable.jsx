@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import CrudModal from "./CrudModal";
 import Pagination from "./Pagination";
-import { affiliates as defaultAffiliates, affiliateFilters } from "../app/dashboard-data";
+import { affiliateFilters } from "../app/dashboard-data";
 import { affiliateFields } from "../app/affiliate-schema";
 import { api } from "../services/api";
 
@@ -18,11 +18,11 @@ function getInitials(name) {
 
 function toAffiliateRecord(company) {
   const status = statusFromApi[company.status] || "Em análise";
-  return { ...company, name: company.razaoSocial, tradeName: company.nomeFantasia || "", documentId: company.cnpj || "", legalRepresentative: company.representanteNome || "", billingEmail: company.emailContato || "", contact: company.representanteNome || company.emailContato || "", status, initials: getInitials(company.razaoSocial || ""), statusClass: statusClasses[status] || "analysis", updated: company.updatedAt ? new Date(company.updatedAt).toLocaleDateString("pt-BR") : "Agora" };
+  return { ...company, name: company.razaoSocial || "Sem Razão", tradeName: company.nomeFantasia || "", documentId: company.cnpj || "", legalRepresentative: company.representanteNome || "", billingEmail: company.emailContato || "", contact: company.representanteNome || company.emailContato || "", status, initials: getInitials(company.razaoSocial || ""), statusClass: statusClasses[status] || "analysis", updated: company.updatedAt ? new Date(company.updatedAt).toLocaleDateString("pt-BR") : "Agora" };
 }
 
 export default function AffiliatesTable({ compact = false, createSignal = 0 }) {
-  const [records, setRecords] = useState(defaultAffiliates);
+  const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
@@ -45,7 +45,7 @@ export default function AffiliatesTable({ compact = false, createSignal = 0 }) {
     let mounted = true;
     api.companies.list({ limit: 100 }).then((result) => {
       const items = result?.items || (Array.isArray(result) ? result : []);
-      if (mounted && items.length > 0) {
+      if (mounted) {
         setRecords(items.map(toAffiliateRecord));
       }
     }).catch((requestError) => {
