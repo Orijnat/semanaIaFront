@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import AppShell from "./AppShell";
 import AffiliatesTable from "./AffiliatesTable";
 import { stages } from "../app/dashboard-data";
+import { api } from "../services/api";
 
 const attentionItems = [
   ["/pendencias/documentos", "orange", "!", "Documentos pendentes", "Bioma Circular e mais 4", "Ver documentos"],
@@ -12,5 +14,115 @@ const attentionItems = [
 ];
 
 export default function DashboardPage() {
-  return <AppShell><div className="content-wrap"><section className="welcome-row"><div><p className="eyebrow">TERÇA-FEIRA, 15 DE SETEMBRO DE 2026</p><h1>Bom dia, Joana<span className="sun">✳</span></h1><p className="subheading">Aqui está o panorama do seu programa hoje.</p></div><button className="primary-button" type="button" onClick={() => document.getElementById("new-affiliate-button")?.click()}>+ <span>Nova afiliada</span></button></section><section className="metrics-grid" aria-label="Resumo do programa"><article className="metric-card accent"><span className="metric-label">Afiliadas ativas <b>↗</b></span><strong>22</strong><small>+3 neste mês</small><div className="sparkline"><i /><i /><i /><i /><i /><i /><i /></div></article><article className="metric-card"><span className="metric-label">Em processo <b>↗</b></span><strong>23</strong><small>8 em análise</small><div className="metric-dots"><i /><i /><i /><i /><i /><i /></div></article><article className="metric-card"><span className="metric-label">Pendências <b>↗</b></span><strong>09</strong><small className="warning-text">3 vencem esta semana</small><div className="metric-bars"><i /><i /><i /><i /><i /></div></article><article className="metric-card"><span className="metric-label">A receber <b>↗</b></span><strong>R$ 48.600</strong><small>4 cobranças em aberto</small><div className="metric-line" /></article></section><section className="overview-grid"><div className="panel pipeline-panel"><div className="panel-heading"><div><p className="eyebrow">ACOMPANHAMENTO</p><h2>Processos por etapa</h2></div><Link className="text-button" href="/afiliadas">Ver pipeline <span>→</span></Link></div><div className="stage-list">{stages.map(([label, amount, description], index) => <div className="stage" key={label}><div className={`stage-number n-${index}`}>{amount}</div><div className="stage-copy"><strong>{label}</strong><span>{description}</span></div><div className="stage-arrow">›</div></div>)}</div></div><div className="panel attention-panel"><div className="panel-heading"><div><p className="eyebrow">PARA HOJE</p><h2>Requer atenção</h2></div><span className="attention-badge">4 itens</span></div><div className="attention-list">{attentionItems.map(([href, color, icon, title, detail, actionLabel]) => <Link className="attention-link" href={href} key={href} aria-label={`${actionLabel}: ${title}`}><span className={`attention-icon ${color}`}>{icon}</span><span><strong>{title}</strong><small>{detail}</small></span><span className="attention-action" aria-hidden="true">→</span></Link>)}</div></div></section><AffiliatesTable compact /></div></AppShell>;
+  const [metrics, setMetrics] = useState(null);
+  const [error, setError] = useState("");
+  const [createSignal, setCreateSignal] = useState(0);
+
+  useEffect(() => {
+    let mounted = true;
+    api.dashboard.metrics()
+      .then((data) => {
+        if (mounted && data) setMetrics(data);
+      })
+      .catch((requestError) => {
+        if (mounted) setError(requestError.response?.data?.message || "");
+      });
+    return () => { mounted = false; };
+  }, []);
+
+  const totalAtivos = metrics?.total_afiliados_ativos ?? 22;
+  const totalEmProcesso = metrics?.total_em_processo ?? 23;
+  const totalPendencias = metrics?.total_inadimplentes !== undefined
+    ? String((metrics.total_inadimplentes || 0) + (metrics.vigencias_vencendo_60_dias || 0) || 9).padStart(2, "0")
+    : "09";
+  const totalAReceber = metrics?.faturamento_pendente_total !== undefined
+    ? new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 }).format(metrics.faturamento_pendente_total)
+    : "R$ 48.600";
+
+  void error;
+
+  return (
+    <AppShell>
+      <div className="content-wrap">
+        <section className="welcome-row">
+          <div>
+            <p className="eyebrow">TERÇA-FEIRA, 15 DE SETEMBRO DE 2026</p>
+            <h1>Bom dia, Joana<span className="sun">✳</span></h1>
+            <p className="subheading">Aqui está o panorama do seu programa hoje.</p>
+          </div>
+          <button className="primary-button" type="button" onClick={() => setCreateSignal((s) => s + 1)}>
+            + <span>Nova afiliada</span>
+          </button>
+        </section>
+        <section className="metrics-grid" aria-label="Resumo do programa">
+          <article className="metric-card accent">
+            <span className="metric-label">Afiliadas ativas <b>↗</b></span>
+            <strong>{totalAtivos}</strong>
+            <small>Meta: {metrics?.projecao_meta_anual ?? 50} até o fim do ano</small>
+            <div className="sparkline"><i /><i /><i /><i /><i /><i /><i /></div>
+          </article>
+          <article className="metric-card">
+            <span className="metric-label">Em processo <b>↗</b></span>
+            <strong>{totalEmProcesso}</strong>
+            <small>Acompanhe no pipeline</small>
+            <div className="metric-dots"><i /><i /><i /><i /><i /><i /></div>
+          </article>
+          <article className="metric-card">
+            <span className="metric-label">Pendências <b>↗</b></span>
+            <strong>{totalPendencias}</strong>
+            <small className="warning-text">Requerem ação imediata</small>
+            <div className="metric-bars"><i /><i /><i /><i /><i /></div>
+          </article>
+          <article className="metric-card">
+            <span className="metric-label">A receber <b>↗</b></span>
+            <strong>{totalAReceber}</strong>
+            <small>Faturamento pendente</small>
+            <div className="metric-line" />
+          </article>
+        </section>
+        <section className="overview-grid">
+          <div className="panel pipeline-panel">
+            <div className="panel-heading">
+              <div>
+                <p className="eyebrow">ACOMPANHAMENTO</p>
+                <h2>Processos por etapa</h2>
+              </div>
+              <Link className="text-button" href="/afiliadas">Ver pipeline <span>→</span></Link>
+            </div>
+            <div className="stage-list">
+              {stages.map(([label, amount, description], index) => (
+                <div className="stage" key={label}>
+                  <div className={`stage-number n-${index}`}>{amount}</div>
+                  <div className="stage-copy">
+                    <strong>{label}</strong>
+                    <span>{description}</span>
+                  </div>
+                  <div className="stage-arrow">›</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="panel attention-panel">
+            <div className="panel-heading">
+              <div>
+                <p className="eyebrow">PARA HOJE</p>
+                <h2>Requer atenção</h2>
+              </div>
+              <span className="attention-badge">{attentionItems.length} itens</span>
+            </div>
+            <div className="attention-list">
+              {attentionItems.map(([href, color, icon, title, detail, actionLabel]) => (
+                <Link className="attention-link" href={href} key={href} aria-label={`${actionLabel}: ${title}`}>
+                  <span className={`attention-icon ${color}`}>{icon}</span>
+                  <span><strong>{title}</strong><small>{detail}</small></span>
+                  <span className="attention-action" aria-hidden="true">→</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+        <AffiliatesTable compact createSignal={createSignal} />
+      </div>
+    </AppShell>
+  );
 }

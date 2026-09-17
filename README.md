@@ -40,6 +40,7 @@ Não há rota de login, formulário público de inscrição, detalhe de empresa 
 - [`Pagination`](src/components/Pagination.jsx): controles reutilizáveis de paginação local, com página atual, total de páginas, navegação anterior/próxima e tamanho da página.
 - [`SectionPage`](src/components/SectionPage.jsx): página genérica das seções de documentos, financeiro, comunicações e configurações. Recebe `activePage`, `title`, `eyebrow`, `description` e `items`.
 - [`CrudModal`](src/components/CrudModal.jsx): modal controlado por propriedades para formulário de criação/edição. Recebe `title`, `fields`, `initialData`, `onClose`, `onSave` e, em edição, `onDelete`.
+- [`affiliate-schema.js`](src/app/affiliate-schema.js): contrato visual normalizado para os campos da planilha, incluindo afiliada, contrato, cobrança, pagamento, vigência e entidades auxiliares.
 ## Comportamento do CRUD
 O modal é usado para afiliadas e para as quatro páginas baseadas em `SectionPage`.
 - Campos são gerados a partir de uma definição local e podem ser texto, `textarea` ou `select`.
@@ -57,9 +58,21 @@ Os dados exibidos são mockados no código:
 - As páginas de documentos, financeiro, comunicações e configurações definem seus próprios itens iniciais em arrays locais.
 - Os registros são copiados para o estado React no carregamento e as inclusões, edições e exclusões existem somente enquanto a página/aplicação permanece aberta.
 Não existe backend, banco de dados, `localStorage`, autenticação ou camada de API configurada. Recarregar a página perde as alterações e restaura os mocks.
+
+## Mapeamento da planilha
+O arquivo [`Planilhas controle de informações afiliados.xlsx`](Planilhas%20controle%20de%20informa%C3%A7%C3%B5es%20afiliados.xlsx) possui seis abas mapeadas para o frontend:
+
+- `Benefícios Afiliadas`: número e benefício.
+- `Controle marca da empresa telão`: empresa, exibição no telão, marca no site e observações.
+- `Planilha reservas espaços físic`: empresa, CNPJ, reservas do Ático, Auditório e coworking, além das datas/observações.
+- `Controle de contratos afiliadas`: dados cadastrais, representante, e-mail de boletos, contrato, valor, NF/boleto, vencimento, pagamento, cobrança seguinte, vigência, renovação e status.
+- `Contato e envio de materiais do`: empresa e controle de materiais.
+- `Mapeamento de prospecção de emp`: cidade, empresa, e-mail para materiais e telefone.
+
+O frontend já consegue receber os campos da aba de contratos pelo contrato em [`affiliate-schema.js`](src/app/affiliate-schema.js). Os valores reais ainda deverão chegar por uma API; a planilha não é carregada automaticamente no navegador.
 ## Identidade visual e responsividade
 O estilo está concentrado em [`globals.css`](src/app/globals.css). A interface usa uma direção visual clara e administrativa, com fundo `#fbfcfa`, verdes para navegação e estados positivos, laranja para atenção, painéis brancos, bordas suaves e cantos arredondados.
-O corpo usa `Plus Jakarta Sans` e títulos usam `Space Grotesk`, carregados via Google Fonts no CSS. O layout também carrega `Geist` e `Geist Mono` com `next/font` em [`layout.js`](src/app/layout.js), disponibilizando as variáveis de fonte, embora os estilos atuais priorizem as fontes definidas em `globals.css`.
+O corpo e os títulos usam `Roboto`, carregada via `next/font` em [`layout.js`](src/app/layout.js).
 Há adaptações para telas menores: a barra lateral reduzida, filtros com rolagem horizontal, tabela com rolagem, grade de métricas em duas colunas e modal ancorado na parte inferior em telas estreitas.
 ## Estados e limitações atuais
 Implementado:
