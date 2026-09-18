@@ -715,3 +715,559 @@ body, button, input, select, textarea, .brand, .welcome-row h1, .metric-card str
   }
 }
 
+/* ==========================================================================
+   POLLEN PARQUE - V2 EXTENSIONS (Inscrição Pública, Ficha 360° e Minuta Híbrida)
+   ========================================================================== */
+
+/* Badges de Modalidade */
+.badge-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.badge-tag.externa {
+  background: #fdf3e7;
+  color: #c97839;
+  border: 1px solid #f6deb8;
+}
+.badge-tag.residente {
+  background: #e8f3ec;
+  color: #376f50;
+  border: 1px solid #c7e0cf;
+}
+
+/* Formulário Público de Autoatendimento Não-Residente (/inscricao) */
+.inscricao-wrapper {
+  min-height: 100vh;
+  background: #f6faf6;
+  color: var(--ink);
+}
+.inscricao-header {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5%;
+  background: white;
+  border-bottom: 1px solid #e2ece4;
+}
+.inscricao-container {
+  max-width: 900px;
+  margin: 36px auto 60px;
+  padding: 0 20px;
+}
+.inscricao-card {
+  background: white;
+  border: 1px solid #dfe9e1;
+  border-radius: 12px;
+  padding: 36px;
+  box-shadow: 0 10px 30px rgba(33, 61, 46, 0.05);
+}
+.inscricao-intro h1 {
+  margin: 12px 0 6px;
+  color: #213d2e;
+  font-size: clamp(22px, 2.5vw, 30px);
+  font-weight: 600;
+}
+.info-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 14px 16px;
+  background: #eff6f1;
+  border: 1px solid #d2e4d6;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #315842;
+  line-height: 1.5;
+}
+.info-banner span {
+  font-size: 18px;
+}
+.inscricao-form {
+  margin-top: 28px;
+  display: grid;
+  gap: 24px;
+}
+.form-section {
+  border: 1px solid #e7efe8;
+  border-radius: 8px;
+  padding: 22px;
+  background: #fdfefd;
+}
+.section-legend {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 10px;
+}
+.legend-number {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #3d7057;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+}
+.section-legend strong {
+  display: block;
+  color: #284c39;
+  font-size: 14px;
+}
+.section-legend small {
+  display: block;
+  color: #8b9a91;
+  font-size: 11px;
+}
+.form-grid-1 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-top: 16px;
+}
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 16px;
+}
+.form-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 16px;
+}
+.input-group {
+  display: grid;
+  gap: 6px;
+}
+.input-group span {
+  font-size: 11px;
+  font-weight: 700;
+  color: #4b6154;
+}
+.input-group input, .input-group select {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid #d8e4db;
+  border-radius: 6px;
+  background: white;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #233d2e;
+  outline: 0;
+}
+.input-group input:focus, .input-group select:focus {
+  border-color: #558769;
+  box-shadow: 0 0 0 3px #e1efe5;
+}
+.input-hint {
+  font-size: 10px;
+  color: #92a297;
+}
+.form-submit-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+/* Card de Sucesso da Inscrição */
+.success-card {
+  max-width: 680px;
+  margin: 60px auto;
+  text-align: center;
+}
+.success-icon-circle {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #e3f2e7;
+  color: #3b7454;
+  font-size: 28px;
+  font-weight: 700;
+}
+.success-title {
+  margin: 8px 0;
+  color: #1f3d2b;
+  font-size: 24px;
+}
+.success-description {
+  color: #6a7c72;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.protocolo-box {
+  margin: 24px 0;
+  padding: 18px;
+  background: #f4f8f5;
+  border: 1px dashed #abc5b2;
+  border-radius: 8px;
+}
+.protocolo-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: #798d81;
+}
+.protocolo-number {
+  display: block;
+  margin: 6px 0 2px;
+  font-size: 26px;
+  font-family: monospace;
+  color: #2f6547;
+  letter-spacing: 2px;
+}
+.proximos-passos-box {
+  text-align: left;
+  background: #fafcfa;
+  border: 1px solid #e7efe9;
+  border-radius: 8px;
+  padding: 18px 24px;
+  margin-bottom: 26px;
+}
+.proximos-passos-box h3 {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: #345241;
+}
+.proximos-passos-box ol {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 12px;
+  color: #55695e;
+  line-height: 1.7;
+}
+.success-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Modal de Contrato Híbrido */
+.contract-modal {
+  width: min(100%, 860px);
+}
+.contract-modal-body {
+  padding: 20px 24px;
+}
+.contract-header-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #edf1ee;
+}
+.contract-status-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.generate-contract-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.anuidade-input-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #5a6e62;
+}
+.anuidade-input-group input {
+  width: 100px;
+  padding: 6px 8px;
+  border: 1px solid #dbe6dd;
+  border-radius: 5px;
+  font-size: 12px;
+}
+.empty-contract-state {
+  text-align: center;
+  padding: 45px 20px;
+  background: #fbfdfc;
+  border: 1px dashed #d5e2d8;
+  border-radius: 8px;
+  margin-top: 18px;
+}
+.empty-contract-state strong {
+  display: block;
+  margin-top: 10px;
+  color: #32503f;
+  font-size: 14px;
+}
+.empty-contract-state p {
+  margin: 6px 0 0;
+  color: #8c9b91;
+  font-size: 11px;
+}
+.pdf-viewer-container {
+  margin-top: 16px;
+}
+.docx-fallback-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  background: #fdf8f0;
+  border: 1px solid #f6deb9;
+  border-radius: 8px;
+}
+.docx-badge {
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #2b579a;
+  color: white;
+  font-weight: 700;
+  font-size: 12px;
+}
+.docx-fallback-banner strong {
+  display: block;
+  color: #5a3c1a;
+  font-size: 13px;
+}
+.docx-fallback-banner p {
+  margin: 4px 0 0;
+  color: #8a6a45;
+  font-size: 11px;
+}
+.pdf-frame-wrapper {
+  border: 1px solid #dce5df;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f8faf8;
+}
+.pdf-frame-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: #eef4f0;
+  border-bottom: 1px solid #dce5df;
+  font-size: 11px;
+  color: #5b6e63;
+}
+.contract-pdf-iframe {
+  width: 100%;
+  height: 520px;
+  border: 0;
+  background: white;
+}
+.pdf-footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+}
+.download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.markdown-viewer-container {
+  margin-top: 16px;
+  border: 1px solid #dbe6de;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.markdown-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: #edf5ef;
+  border-bottom: 1px solid #dbe6de;
+  font-size: 11px;
+  color: #4b6354;
+}
+.markdown-content-box {
+  padding: 20px;
+  max-height: 480px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #2f4337;
+  background: white;
+}
+
+/* Ficha 360° da Empresa (CompanyDetailModal) */
+.company-detail-modal {
+  width: min(100%, 940px);
+}
+.detail-tabs-nav {
+  display: flex;
+  border-bottom: 1px solid #e5ece6;
+  background: #f7faf8;
+  overflow-x: auto;
+  padding: 0 16px;
+}
+.detail-tab-btn {
+  padding: 12px 16px;
+  border: 0;
+  background: transparent;
+  color: #728479;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+}
+.detail-tab-btn.active {
+  color: #26543b;
+  border-bottom-color: #3f7158;
+  background: white;
+}
+.company-detail-content {
+  padding: 20px 24px;
+  max-height: 65vh;
+  overflow-y: auto;
+}
+.detail-tab-pane {
+  display: grid;
+  gap: 16px;
+}
+.detail-section-card {
+  padding: 20px;
+  border: 1px solid #e7eee9;
+  border-radius: 8px;
+  background: white;
+}
+.detail-section-card h3 {
+  margin: 0 0 12px;
+  color: #264332;
+  font-size: 15px;
+}
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px 20px;
+  font-size: 12px;
+}
+.detail-grid span {
+  display: block;
+  color: #8c9c92;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.detail-grid strong {
+  color: #2a4134;
+}
+
+/* Pipeline Stepper */
+.pipeline-stepper {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 8px 0;
+}
+.stepper-step {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #f1f6f2;
+  border: 1px solid #e2ebe4;
+  white-space: nowrap;
+}
+.stepper-step.current {
+  background: #e3f2e7;
+  border-color: #aed5ba;
+  color: #26533a;
+  font-weight: 700;
+}
+.step-num {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: white;
+  font-size: 10px;
+}
+.stepper-step.current .step-num {
+  background: #3f7158;
+  color: white;
+}
+.step-name {
+  font-size: 10px;
+}
+
+/* Signatários Checklist */
+.signatures-list {
+  display: grid;
+  gap: 10px;
+}
+.signature-row-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border: 1px solid #edf2ee;
+  border-radius: 6px;
+  background: #fbfdfc;
+}
+.signature-checkbox {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #a8c1af;
+  border-radius: 4px;
+  background: white;
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+}
+.signature-checkbox.checked {
+  background: #3d7057;
+  border-color: #3d7057;
+}
+.doc-upload-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 12px;
+  background: #f8faf8;
+  border-radius: 6px;
+  border: 1px solid #e7efe9;
+}
+.doc-upload-inline select, .doc-upload-inline input[type="file"] {
+  font-size: 11px;
+}
+
+@media (max-width: 768px) {
+  .form-grid-2, .form-grid-3, .detail-grid {
+    grid-template-columns: 1fr;
+  }
+  .inscricao-card {
+    padding: 20px;
+  }
+  .contract-header-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+

@@ -94,6 +94,17 @@ export default function AppShell({ children, activePage = "visao-geral", breadcr
             Portal da Afiliada
             <span className="nav-badge-pill">Afiliada</span>
           </Link>
+          <Link
+            className="nav-item portal-shortcut-link"
+            href="/inscricao"
+            target="_blank"
+            rel="noreferrer"
+            title="Abrir Formulário de Inscrição Não Residente"
+          >
+            <span className="nav-icon" aria-hidden="true">📝</span>
+            Inscrição Externa
+            <span className="nav-badge-pill" style={{ background: "#fef3e7", color: "#c87839" }}>Pública</span>
+          </Link>
         </nav>
         <div className="sidebar-bottom">
           <Link

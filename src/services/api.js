@@ -4,6 +4,14 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002/a
 
 const unwrap = ({ data }) => data?.data ?? data;
 
+export const getStaticUrl = (filePath) => {
+  if (!filePath) return '';
+  if (filePath.startsWith('http://') || filePath.startsWith('https://')) return filePath;
+  const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002').replace(/\/api(\/v1)?\/?$/, '');
+  const cleanPath = filePath.startsWith('/') ? filePath : `/${filePath}`;
+  return `${baseUrl}${cleanPath}`;
+};
+
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -118,12 +126,16 @@ export const api = {
             porte: dbData.tipo || 'Não informado',
             categoria: 'Afiliada',
             status: dbData.status || 'Desconhecido',
+            residente: dbData.residente,
+            tipo: dbData.tipo,
             dataAdesao: dbData.dataVigenciaInicio ? new Date(dbData.dataVigenciaInicio).toLocaleDateString('pt-BR') : 'Não informada',
             endereco: dbData.enderecoCompleto || 'Sede Pollen'
           },
           contract: {
             status: dbData.status,
+            id: dbData.contratos?.[0]?.id,
             numeroTermo: dbData.contratos?.[0]?.numeroTermo || 'N/A',
+            conteudoGerado: dbData.contratos?.[0]?.conteudoGerado || dbData.contratos?.[0]?.conteudo_gerado || null,
             dataInicio: dbData.dataVigenciaInicio ? new Date(dbData.dataVigenciaInicio).toLocaleDateString('pt-BR') : 'N/A',
             dataTermino: dbData.dataVigenciaFim ? new Date(dbData.dataVigenciaFim).toLocaleDateString('pt-BR') : 'N/A',
             proximaRenovacao: dbData.dataVigenciaFim ? new Date(dbData.dataVigenciaFim).toLocaleDateString('pt-BR') : 'N/A',
@@ -188,6 +200,9 @@ export const api = {
     generateContract: async (id, contractData = {}) => {
       return unwrap(await apiClient.post(`/companies/${id}/contract/generate`, contractData));
     },
+    registerNonResident: async (companyData) => {
+      return unwrap(await apiClient.post('/companies/nao-residente', companyData));
+    },
     remove: async (id) => {
       return unwrap(await apiClient.delete(`/companies/${id}`));
     }
@@ -247,6 +262,7 @@ export const api = {
   },
 
   public: {
-    register: async (companyData) => unwrap(await apiClient.post('/public/register', companyData))
+    register: async (companyData) => unwrap(await apiClient.post('/public/register', companyData)),
+    registerNonResident: async (companyData) => unwrap(await apiClient.post('/public/nao-residente', companyData))
   }
 };

@@ -1,0 +1,19 @@
+# Relatório de Análise e Orientações Técnicas do Backend para o Frontend
+Data: 18/09/2026
+Autor: Desenvolvedor Backend / Orquestrador SDLC
+Referência: relatorio_alteracoes_e_pendencias_v2.md
+
+1. Status dos Endpoints no Backend:
+   - Todas as correções prioritárias do Backend apontadas no relatório V2 foram executadas com sucesso:
+     a) Rota /companies/nao-residente e aliases /empresas/nao-residente e /public/nao-residente registradas e testadas.
+     b) Rota /empresas/:id/contract/generate registrada como alias de /companies/:id/contract/generate.
+     c) O gerador de contratos DOCX -> PDF foi blindado contra erros de caminho relativo (__dirname) e falsos positivos do LibreOffice, com fallback seguro para DOCX.
+     d) Minutas em PDF/DOCX geradas são automaticamente inseridas na tabela documentos_anexos com status 'APROVADO'.
+     e) Substituição completa de 100% dos marcadores do contrato (CNPJ, Razão Social, endereço, representante legal, telefone, emails e anuidade por extenso).
+
+2. Cuidados e Erros Potenciais a Prevenir no Frontend:
+   - Não tentar renderizar strings que iniciam com "[PDF GERADO]" como texto Markdown. Use a função getStaticUrl() já adicionada em src/services/api.js e renderize iframe ou botão de download.
+   - O formulário público de empresas não-residentes precisa enviar os 16 campos mapeados. O backend aceita tanto camelCase quanto snake_case.
+   - Na listagem de documentos da empresa (/companies/:id/documents), a minuta gerada agora aparece com tipo 'MINUTA_ASSINADA' e caminho_arquivo apontando para /uploads/contratos/....
+   - Para maiores detalhes, consulte o arquivo frontend/INSTRUCOES_ROTAS_FRONTEND.md.
+

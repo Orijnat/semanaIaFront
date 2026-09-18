@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "../services/api";
+import ContractModal from "./ContractModal";
 
 export default function CompanyPortalPage() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function CompanyPortalPage() {
   const [user] = useState(() => api.auth.getCurrentUser());
 
   // Estados dos Modais
+  const [contractModalOpen, setContractModalOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [selectedDocForUpload, setSelectedDocForUpload] = useState(null);
   const [uploadFile, setUploadFile] = useState(null);
@@ -459,6 +461,14 @@ export default function CompanyPortalPage() {
                     onClick={() => setRenewalModalOpen(true)}
                   >
                     Solicitar Renovação da Anuidade
+                  </button>
+                  <button
+                    className="secondary-button full-width"
+                    type="button"
+                    style={{ marginTop: "8px" }}
+                    onClick={() => setContractModalOpen(true)}
+                  >
+                    📄 Visualizar / Baixar Minuta Contratual
                   </button>
                 </section>
 
@@ -961,6 +971,29 @@ export default function CompanyPortalPage() {
             )}
           </section>
         </div>
+      )}
+
+      {contractModalOpen && (
+        <ContractModal
+          company={{
+            id: company.id || user?.companyId,
+            razaoSocial: company.razaoSocial || company.nomeFantasia,
+            name: company.razaoSocial || company.nomeFantasia,
+            cnpj: company.cnpj,
+            residente: company.residente
+          }}
+          initialContract={
+            contract.id || contract.conteudoGerado
+              ? {
+                  id: contract.id,
+                  numeroTermo: contract.numeroTermo,
+                  conteudoGerado: contract.conteudoGerado || (company.residente === false ? `[PDF GERADO] /uploads/contratos/contrato_${company.id || user?.companyId}.pdf` : null),
+                  valorAnuidade: contract.valorAnuidadeAnual
+                }
+              : null
+          }
+          onClose={() => setContractModalOpen(false)}
+        />
       )}
     </div>
   );

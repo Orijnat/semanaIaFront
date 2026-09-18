@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { api } from "../../services/api";
 
 export default function LoginPage() {
@@ -130,6 +131,18 @@ export default function LoginPage() {
               {loading ? "Entrando..." : "Entrar"}
             </button>
           </form>
+
+          <div className="login-public-signup-callout" style={{ marginTop: "18px", padding: "12px 14px", background: "#f0f6f2", borderRadius: "8px", border: "1px solid #d4e4d8", textAlign: "center" }}>
+            <span style={{ fontSize: "12px", color: "#365c47", display: "block" }}>
+              Deseja afiliar sua empresa externa?
+            </span>
+            <Link
+              href="/inscricao"
+              style={{ fontSize: "12px", fontWeight: "700", color: "#2d6346", textDecoration: "underline", display: "inline-block", marginTop: "4px" }}
+            >
+              Preencher Formulário de Inscrição Não Residente →
+            </Link>
+          </div>
 
           <div className="login-demo-profiles">
             <p className="eyebrow" style={{ marginTop: "24px", marginBottom: "8px" }}>PERFIS DE DEMONSTRAÇÃO</p>
